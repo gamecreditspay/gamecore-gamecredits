@@ -100,6 +100,13 @@ public:
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000027a2b9e1150fac93a");
 
+        // Hardfork params
+        consensus.nSwitchKGW2 = 15332;
+        consensus.nSwitchKGW2prefork = 1036320;
+        consensus.nSwitchKGW2postfork = 1096772;
+        consensus.nSwitchDGW = 1981542;
+
+
         /**
          * The message start string is designed to be unlikely to occur in normal data.
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce

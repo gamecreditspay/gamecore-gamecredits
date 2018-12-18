@@ -61,6 +61,14 @@ struct Params {
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
     int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
+    int nSwitchKGW2;
+    int nSwitchKGW2prefork;
+    int nSwitchKGW2postfork;
+    int nSwitchDGW;
+    int SwitchKGW2block() const { return nSwitchKGW2; }
+    int SwitchKGW2blockprefork() const { return nSwitchKGW2prefork; }
+    int SwitchKGW2blockpostfork() const { return nSwitchKGW2postfork; }
+    int SwitchDGWblock() const { return nSwitchDGW; }
     uint256 nMinimumChainWork;
 };
 } // namespace Consensus
