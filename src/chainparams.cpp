@@ -71,14 +71,14 @@ public:
     CMainParams() {
         strNetworkID = "main";
         consensus.nSubsidyHalvingInterval = 840000;
-        consensus.nMajorityEnforceBlockUpgrade = 1916; // these were removed before 0.15.x, need a newer fork of litecore.
-        consensus.nMajorityRejectBlockOutdated = 2016;
-        consensus.nMajorityWindow = 2016;
+        consensus.nMajorityEnforceBlockUpgrade = 750;
+        consensus.nMajorityRejectBlockOutdated = 950;
+        consensus.nMajorityWindow = 1000;
         consensus.BIP34Height = 1;
         consensus.BIP34Hash = uint256S("2bcc081187bc9ccfda61584d0dc161167b0954a89c5685db79bd465e4ec8b4d3");
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); 
-        consensus.nPowTargetTimespan = 30 * 60;
-        consensus.nPowTargetSpacing = 1.5 * 60;
+        consensus.nPowTargetTimespan = 30 * 60; // every 30 minutes
+        consensus.nPowTargetSpacing = 1.5 * 60; // 90 sec
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916; // 75% of 8064
@@ -89,23 +89,16 @@ public:
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1531612800; // July 15, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1563062400; // July 14, 2019
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1531612800; // January 28, 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1563062400; // January 31st, 2018
 
         // Deployment of SegWit (BIP141, BIP143, and BIP147)
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1531612800; // July 15, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1563062400; // July 14, 2019
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1531612800; // January 28, 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1563062400; // January 31st, 2018
 
         // The best chain should have at least this much work.
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000027a2b9e1150fac93a");
-
-        // Hardfork params
-        consensus.nSwitchKGW2 = 15332;
-        consensus.nSwitchKGW2prefork = 1036320;
-        consensus.nSwitchKGW2postfork = 1096772;
-        consensus.nSwitchDGW = 1981542;
-
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -116,7 +109,7 @@ public:
         pchMessageStart[1] = 0xc0;
         pchMessageStart[2] = 0xb6;
         pchMessageStart[3] = 0xdb;
-        nDefaultPort = 40002;
+        nDefaultPort = 40001;
         nPruneAfterHeight = 0;
 
         genesis = CreateGenesisBlock(1392757140, 2084565393, 0x1e0ffff0, 1, 50 * COIN);
@@ -125,7 +118,8 @@ public:
         assert(genesis.hashMerkleRoot == uint256S("0xd849db99a14164f4b4c8ad6d2d8d7e2b1ba7f89963e9f4bf9fad5ff1a4754429"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
-        vSeeds.push_back(CDNSSeedData("dnsseed.btcgold.club", true));
+        vSeeds.push_back(CDNSSeedData("gamecredits.org", "dnsseed.gamecredits.org", true));
+        vSeeds.push_back(CDNSSeedData("gamecredits.org", "gamecredits.com", true));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,38);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
@@ -142,19 +136,24 @@ public:
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = false;
 
+        consensus.nSwitchKGW2 = 15332;
+        consensus.nSwitchKGW2prefork = 1036320;
+        consensus.nSwitchKGW2postfork = 1096772;
+        consensus.nSwitchDGW = 1981542;
+
 	checkpointData = (CCheckpointData) {
 		boost::assign::map_list_of
-			(  100, uint256S("0x070b302bc2ea79b20a63f5237d16c3edf00b21550186f5beaeeb8e992c87a14b")),
-            (  15332, uint256S("0xd492573db3624e06b80942ae08f907997f307d6da4e6c68ad40213864216d820")),
-            (  1036320, uint256S("0x8ae4c958bb817875c8dfa3f7f35044298d3f7a96c9e55d633f1c9618550bc577")),
-            (  1096772, uint256S("0x3dd493ea7be808f7fb60af5ea90d6ce4a56c34dc92affefea267d082af8b24d8")),
-            ( 1981542, uint256S("0x12bf94f425d937a95b5c85c4d6dca3cc09658bb516a7e39dbd7fadd760a37133")),,
+			(  100, uint256S("0x070b302bc2ea79b20a63f5237d16c3edf00b21550186f5beaeeb8e992c87a14b"))
+			(  15332, uint256S("0xd492573db3624e06b80942ae08f907997f307d6da4e6c68ad40213864216d820"))
+			(  1036320, uint256S("0x8ae4c958bb817875c8dfa3f7f35044298d3f7a96c9e55d633f1c9618550bc577"))
+			(  1096772, uint256S("0x3dd493ea7be808f7fb60af5ea90d6ce4a56c34dc92affefea267d082af8b24d8"))
+			(1981542, uint256S("0x12bf94f425d937a95b5c85c4d6dca3cc09658bb516a7e39dbd7fadd760a37133")),
 			1527141776, // * UNIX timestamp of last checkpoint block
 			3291542,   // * total number of transactions between genesis and last checkpoint
 			//   (the tx=... number in the SetBestChain debug.log lines)
-			864.0     // * estimated number of transactions per day after checkpoint
+			0.01     // * estimated number of transactions per day after checkpoint
 	};
-
+ 
     }
 };
 static CMainParams mainParams;
@@ -167,10 +166,10 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 840000;
-        consensus.nMajorityEnforceBlockUpgrade = 51; // need newer fork of litecore to remove these
+        consensus.nMajorityEnforceBlockUpgrade = 51;
         consensus.nMajorityRejectBlockOutdated = 75;
         consensus.nMajorityWindow = 100;
-        consensus.BIP34Height = 100000000;
+        consensus.BIP34Height = -1;
         consensus.BIP34Hash = uint256S("");
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 30 * 60;
@@ -185,21 +184,21 @@ public:
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1531612800; // July 15, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1563062400; // July 14, 2019
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1483228800; // January 1, 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nTimeout = 1563062400; // January 31st, 2018
 
         // Deployment of SegWit (BIP141, BIP143, and BIP147)
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].bit = 1;
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1531612800; // July 15, 2018
-        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1563062400; // July 14, 2019
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 1483228800; // January 1, 2017
+        consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 1563062400; // January 31st, 2018
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000027a2b9e1150fac93a");
 
-        pchMessageStart[0] = 0x0b;
-        pchMessageStart[1] = 0x11;
-        pchMessageStart[2] = 0x09;
-        pchMessageStart[3] = 0x07;
+        pchMessageStart[0] = 0xfd;
+        pchMessageStart[1] = 0xd2;
+        pchMessageStart[2] = 0xc8;
+        pchMessageStart[3] = 0xf1;
         nDefaultPort = 50001;
         nPruneAfterHeight = 1000;
 
@@ -211,8 +210,8 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.push_back(CDNSSeedData("gamecredits.co", true)); // these domains are dead
-        vSeeds.push_back(CDNSSeedData("test.gamecredits.co", true));
+        vSeeds.push_back(CDNSSeedData("litecointools.com", "testnet-seed.litecointools.com"));
+        vSeeds.push_back(CDNSSeedData("loshan.co.uk", "seed-b.litecoin.loshan.co.uk", true));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
@@ -232,7 +231,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             boost::assign::map_list_of
-           // ( 2056, uint256S("0x17748a31ba97afdc9a4f86837a39d287e3e7c7290a08a1d816c5969c78a83289")),
+            ( 0, uint256S("0x")),
             0,
             0,
             0
@@ -253,13 +252,13 @@ public:
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
         consensus.nMajorityWindow = 1000;
-        consensus.BIP34Height = 100000000; // BIP34 has not necessarily activated on regtest
+        consensus.BIP34Height = -1; // BIP34 has not necessarily activated on regtest
         consensus.BIP34Hash = uint256();
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 30 * 60;
+        consensus.nPowTargetTimespan = 30 * 60; // two weeks
         consensus.nPowTargetSpacing = 1.5 * 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
-        consensus.fPowNoRetargeting = true;
+        consensus.fPowNoRetargeting = true; 
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
@@ -298,7 +297,7 @@ public:
 
 	checkpointData = (CCheckpointData){
 		boost::assign::map_list_of
-			( 0, uint256S("0x2574af5d531ba2c7b1b2994de62ae356699cb579cd744cf5dc8a565fce6db638")),
+			( 0, uint256S("0x")),
 			0,
 			0,
 			0
